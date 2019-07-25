@@ -21,3 +21,4 @@ venv.bak/
 .vscode/
 .~lock*
 data_index.pickle
+__pycache__/
