@@ -2,15 +2,13 @@ import argparse
 import csv
 import os
 import pickle
-import re
 import itertools
 
+from constants import BASE_DIR, INDEX_FILE, INDEX_FILE_DIR
 from utils import get_bigrams, remove_whitespace
 
-BASE_DIR = os.path.dirname(__file__)
 CSV_FILE = 'KEN_ALL.CSV'
 DEFAULT_SOURCE = os.path.join(BASE_DIR, CSV_FILE)
-INDEX_FILE = 'data_index.pickle'
 
 
 def generate_index_file(data_source=DEFAULT_SOURCE):
@@ -39,7 +37,7 @@ def generate_index_file(data_source=DEFAULT_SOURCE):
                 else:
                     data_index[bigram] = [data_row]
 
-    with open(os.path.join(BASE_DIR, INDEX_FILE), 'wb') as f:
+    with open(INDEX_FILE_DIR, 'wb') as f:
         pickle.dump(data_index, f, pickle.HIGHEST_PROTOCOL)
 
     print('Index file successfully created as {}'.format(INDEX_FILE))
