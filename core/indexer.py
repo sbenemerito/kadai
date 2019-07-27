@@ -1,11 +1,10 @@
-import argparse
 import csv
 import os
 import pickle
 import itertools
 
-from constants import BASE_DIR, INDEX_FILE, INDEX_FILE_DIR
-from utils import get_bigrams, remove_whitespace
+from .constants import BASE_DIR, INDEX_FILE, INDEX_FILE_DIR
+from .utils import get_bigrams, remove_whitespace
 
 CSV_FILE = 'KEN_ALL.CSV'
 DEFAULT_SOURCE = os.path.join(BASE_DIR, CSV_FILE)
@@ -41,18 +40,3 @@ def generate_index_file(data_source=DEFAULT_SOURCE):
         pickle.dump(data_index, f, pickle.HIGHEST_PROTOCOL)
 
     print('Index file successfully created as {}'.format(INDEX_FILE))
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='Generate index file for a specified data source.'
-    )
-    parser.add_argument('-s', '--source',
-                        help='Directory of data source to be used')
-    args = parser.parse_args()
-
-    try:
-        generate_index_file(data_source=args.source)
-    except FileNotFoundError as e:
-        print('Specified file not found, falling back to default data source.')
-        generate_index_file()
