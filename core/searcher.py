@@ -13,6 +13,7 @@ def query_data(search_term='', index_dir=INDEX_FILE_DIR, data=None):
                 data = pickle.load(f)
         except FileNotFoundError:
             print('No index file yet!')
+            return []
 
     matching_data = []
     for bigram in get_bigrams(search_term):
@@ -21,5 +22,3 @@ def query_data(search_term='', index_dir=INDEX_FILE_DIR, data=None):
                 matching_data.append(item)
 
     return remove_duplicates(matching_data)
-
-    return []

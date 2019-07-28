@@ -7,6 +7,13 @@ from core.searcher import query_data
 
 
 def generate_index(data_source=None):
+    """
+    Handler function for the indexer subparser.
+
+    Calls the generate_index_file method, and sends the source argument as
+    data_source if provided.
+    """
+
     try:
         if data_source is None:
             generate_index_file()
@@ -17,6 +24,13 @@ def generate_index(data_source=None):
 
 
 def search():
+    """
+    Handler function for the searcher subparser.
+
+    A REPL interface that pre-loads the index file data, takes an input string,
+    and uses it to query the index file data through the query_data method.
+    """
+
     data = None
     with open(INDEX_FILE_DIR, 'rb') as f:
         data = pickle.load(f)
