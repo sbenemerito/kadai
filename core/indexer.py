@@ -4,16 +4,14 @@ import pickle
 import itertools
 
 from .constants import BASE_DIR, INDEX_FILE_DIR
-from .utils import get_bigrams, remove_whitespace
+from .utils import get_special_bigrams, remove_whitespace
 
 CSV_FILE = 'KEN_ALL.CSV'
 DEFAULT_SOURCE = os.path.join(BASE_DIR, CSV_FILE)
 
 
 def write_data_by_bigram(data_row=None, data_index=None):
-    bigrams = []
-    for item in data_row[1:]:
-        bigrams.append(get_bigrams(item))
+    bigrams = get_special_bigrams(data_row[1:])
 
     if data_index is not None:
         bigrams = list(dict.fromkeys(itertools.chain(*bigrams)))
