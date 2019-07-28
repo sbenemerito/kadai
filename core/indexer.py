@@ -10,6 +10,20 @@ CSV_FILE = 'KEN_ALL.CSV'
 DEFAULT_SOURCE = os.path.join(BASE_DIR, CSV_FILE)
 
 
+def write_data_by_bigram(data_row=None, data_index=None):
+    bigrams = []
+    for item in data_row[1:]:
+        bigrams.append(get_bigrams(item))
+
+    if data_index is not None:
+        bigrams = list(dict.fromkeys(itertools.chain(*bigrams)))
+        for bigram in bigrams:
+            if bigram in data_index:
+                data_index[bigram].append(data_row)
+            else:
+                data_index[bigram] = [data_row]
+
+
 def generate_index_file(data_source=DEFAULT_SOURCE):
     data_index = dict()
 
@@ -19,7 +33,7 @@ def generate_index_file(data_source=DEFAULT_SOURCE):
         active_row = [None]
 
         for row in reader:
-            zipcode = remove_whitespace(row[2])
+            zipcode = remove_whitespace(row[2]).zfill(7)
             prefecture = remove_whitespace(row[6])
             address1 = remove_whitespace(row[7])
             address2 = remove_whitespace(row[8])
@@ -33,18 +47,11 @@ def generate_index_file(data_source=DEFAULT_SOURCE):
                 active_row[3] = '{}{}'.format(active_row[3], address2)
                 continue
 
-            bigrams = []
-            for item in active_row[1:]:
-                bigrams.append(get_bigrams(item))
-
-            bigrams = list(dict.fromkeys(itertools.chain(*bigrams)))
-            for bigram in bigrams:
-                if bigram in data_index:
-                    data_index[bigram].append(active_row)
-                else:
-                    data_index[bigram] = [active_row]
-
+            write_data_by_bigram(active_row, data_index)
             active_row = data_row
+
+        # Write one more time for last active_row
+        write_data_by_bigram(active_row, data_index)
 
     with open(INDEX_FILE_DIR, 'wb') as f:
         pickle.dump(data_index, f, pickle.HIGHEST_PROTOCOL)
