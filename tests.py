@@ -34,18 +34,17 @@ class TestApp(unittest.TestCase):
             index_dir=TEST_INDEX_FILE
         )
 
-        for bigram_matches in query_result:
-            for row in bigram_matches:
-                if row[0] in sample_outputs:
-                    match_counter = match_counter + 1
-                
-                if row[0] == '6050874':
-                    with self.subTest():
-                        self.assertEqual(row[3], special_value,
-                                         'Split rows should be joined')
+        for row in query_result:
+            if row[0] in sample_outputs:
+                match_counter = match_counter + 1
 
-                if match_counter == 3:
-                    break
+            if row[0] == '6050874':
+                with self.subTest():
+                    self.assertEqual(row[3], special_value,
+                                        'Split rows should be joined')
+
+            if match_counter == 3:
+                break
 
         with self.subTest():
             self.assertEqual(match_counter, 3,
