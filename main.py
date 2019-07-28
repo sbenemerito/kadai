@@ -1,5 +1,7 @@
 import argparse
+import pickle
 
+from core.constants import INDEX_FILE_DIR
 from core.indexer import generate_index_file
 from core.searcher import query_data
 
@@ -14,10 +16,21 @@ def generate_index(data_source=None):
         print('Data source not found!')
 
 
-def search(query=None):
-    results = query_data(query[0])
-    for row in results:
-        print(','.join(['"{}"'.format(value) for value in row]))
+def search():
+    data = None
+    with open(INDEX_FILE_DIR, 'rb') as f:
+        data = pickle.load(f)
+
+    while True:
+        query = input('入力：')
+
+        if query == '':
+            break
+
+        print('出力')
+        results = query_data(search_term=query, data=data)
+        for row in results:
+            print(','.join(['"{}"'.format(value) for value in row]))
 
 
 if __name__ == '__main__':
@@ -34,12 +47,6 @@ if __name__ == '__main__':
     )
 
     searcher_parser = subparsers.add_parser('search')
-    searcher_parser.add_argument(
-        'query',
-        type=str,
-        nargs=1,
-        help='search term to be used for the query'
-    )
 
     kwargs = vars(parser.parse_args())
     globals()[kwargs.pop('subparser')](**kwargs)
