@@ -4,7 +4,7 @@ from .constants import INDEX_FILE_DIR
 from .utils import get_bigrams, remove_whitespace
 
 
-def query_data(search_term=''):
+def query_data(search_term='', index_dir=INDEX_FILE_DIR):
     search_term = remove_whitespace(search_term)
 
     # Raise error for non-bigram input?
@@ -13,7 +13,7 @@ def query_data(search_term=''):
         return
 
     data = None
-    with open(INDEX_FILE_DIR, 'rb') as f:
+    with open(index_dir, 'rb') as f:
         data = pickle.load(f)
 
     if data:

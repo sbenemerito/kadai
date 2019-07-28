@@ -3,7 +3,7 @@ import os
 import pickle
 import itertools
 
-from .constants import BASE_DIR, INDEX_FILE, INDEX_FILE_DIR
+from .constants import BASE_DIR, INDEX_FILE_DIR
 from .utils import get_bigrams, remove_whitespace
 
 CSV_FILE = 'KEN_ALL.CSV'
@@ -24,7 +24,7 @@ def write_data_by_bigram(data_row=None, data_index=None):
                 data_index[bigram] = [data_row]
 
 
-def generate_index_file(data_source=DEFAULT_SOURCE):
+def generate_index_file(data_source=DEFAULT_SOURCE, index_dir=INDEX_FILE_DIR):
     data_index = dict()
 
     with open(data_source, encoding='shift-jis') as csvfile:
@@ -53,7 +53,7 @@ def generate_index_file(data_source=DEFAULT_SOURCE):
         # Write one more time for last active_row
         write_data_by_bigram(active_row, data_index)
 
-    with open(INDEX_FILE_DIR, 'wb') as f:
+    with open(index_dir, 'wb') as f:
         pickle.dump(data_index, f, pickle.HIGHEST_PROTOCOL)
 
-    print('Index file successfully created as {}'.format(INDEX_FILE))
+    print('Index file successfully created')
