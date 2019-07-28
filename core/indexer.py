@@ -16,25 +16,35 @@ def generate_index_file(data_source=DEFAULT_SOURCE):
     with open(data_source, encoding='shift-jis') as csvfile:
         print('Generating index file from data source...')
         reader = csv.reader(csvfile)
+        active_row = [None]
 
         for row in reader:
-            row_id = remove_whitespace(row[2])
-            row_pref = remove_whitespace(row[6])
-            row_address = remove_whitespace(row[7])
-            row_address2 = remove_whitespace(row[8])
+            zipcode = remove_whitespace(row[2])
+            prefecture = remove_whitespace(row[6])
+            address1 = remove_whitespace(row[7])
+            address2 = remove_whitespace(row[8])
+            data_row = [zipcode, prefecture, address1, address2]
 
-            data_row = [row_id, row_pref, row_address, row_address2]
+            if active_row[0] is None:
+                active_row = data_row
+                continue
+
+            if zipcode == active_row[0]:
+                active_row[3] = '{}{}'.format(active_row[3], address2)
+                continue
 
             bigrams = []
-            for item in [row_pref, row_address, row_address2]:
+            for item in active_row[1:]:
                 bigrams.append(get_bigrams(item))
 
             bigrams = list(dict.fromkeys(itertools.chain(*bigrams)))
             for bigram in bigrams:
                 if bigram in data_index:
-                    data_index[bigram].append(data_row)
+                    data_index[bigram].append(active_row)
                 else:
-                    data_index[bigram] = [data_row]
+                    data_index[bigram] = [active_row]
+
+            active_row = data_row
 
     with open(INDEX_FILE_DIR, 'wb') as f:
         pickle.dump(data_index, f, pickle.HIGHEST_PROTOCOL)
