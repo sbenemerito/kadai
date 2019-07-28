@@ -16,9 +16,8 @@ def generate_index(data_source=None):
 
 def search(query=None):
     results = query_data(query[0])
-    for bigram_matches in results:
-        for row in bigram_matches:
-            print(','.join(['"{}"'.format(value) for value in row]))
+    for row in results:
+        print(','.join(['"{}"'.format(value) for value in row]))
 
 
 if __name__ == '__main__':

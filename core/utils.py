@@ -7,3 +7,12 @@ def get_bigrams(text):
 
 def remove_whitespace(text):
     return re.sub(r'\s+', '', text)
+
+
+def remove_duplicates(input_list):
+    new_list = []
+    for item in input_list:
+        if item not in new_list:
+            new_list.append(item)
+
+    return new_list
