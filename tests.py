@@ -45,11 +45,6 @@ class TestApp(unittest.TestCase):
             self.assertEqual(match_counter, 3,
                              'Should match all three sample outputs')
 
-    @classmethod
-    def tearDownClass(cls):
-        if os.path.isfile(INDEX_FILE_DIR):
-            os.remove(INDEX_FILE_DIR)
-
 
 if __name__ == '__main__':
    unittest.main()
